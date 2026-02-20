@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Project Yale – Peak Season Calendar</title>
+    <style>
+        :root {
+          --bg: #f5f6f8;
+          --white: #ffffff;
+          --surface2: #f0f2f5;
+          --border: #e2e5ea;
+          --border2: #d0d4dc;
+          --text: #1a1d23;
+          --text2: #4a5060;
+          --muted: #8a909e;
+          --accent: #0f4c91;
+          --accent-light: #e8eef8;
+          --gap: #1a6ef5;
+          --gap-light: #e8f0fe;
+          --athleta: #c2185b;
+          --athleta-light: #fce4ec;
+          --oldnavy: #00875a;
+          --oldnavy-light: #e3f5ef;
+          --banana: #d4830a;
+          --banana-light: #fff3e0;
+          --allbrands: #5c35b5;
+          --allbrands-light: #ede7f6;
+          --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+          --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+          --radius: 12px;
+
+          /* System font stack — no Google Fonts needed */
+          --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+          --font-mono: 'Courier New', Courier, monospace;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        /* KEY: html & body must be height:auto with no overflow hidden */
+        html, body {
+          height: auto;
+          overflow-x: hidden;
+          overflow-y: visible;
+          background: var(--bg);
+          color: var(--text);
+          font-family: var(--font);
+        }
+
+        .widget-wrap {
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 28px 24px 36px;
+        }
+
+        /* ── Header ── */
+        .header {
+          display: flex;
+          align-items: flex-start;
+          justify-content: space-between;
+          margin-bottom: 28px;
+        }
+        .eyebrow {
+          display: flex;
+          align-items: center;
+          gap: 7px;
+          font-family: var(--font-mono);
+          font-size: 10px;
+          letter-spacing: 2.5px;
+          text-transform: uppercase;
+          color: var(--accent);
+          margin-bottom: 8px;
+        }
+        .eyebrow-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
+        .title { font-size: clamp(24px, 3.5vw, 38px); font-weight: 700; color: var(--text); line-height: 1.1; letter-spacing: -0.5px; }
+        .title em { color: var(--accent); font-style: italic; }
+        .subtitle { margin-top: 5px; font-size: 13px; color: var(--muted); font-weight: 400; }
+        .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+        .live-badge {
+          display: flex; align-items: center; gap: 6px;
+          background: var(--oldnavy-light);
+          border: 1px solid rgba(0,135,90,0.25);
+          border-radius: 100px; padding: 5px 12px;
+          font-size: 10px; color: var(--oldnavy);
+          font-family: var(--font-mono); font-weight: 600;
+        }
+        .live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--oldnavy); animation: pulse 2s infinite; }
+        .updated-text { font-size: 10px; color: var(--muted); font-family: var(--font-mono); }
+
+        /* ── KPI Strip ── */
+        .kpi-strip { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 24px; }
+        .kpi-card {
+          background: var(--white); border: 1px solid var(--border);
+          border-radius: var(--radius); padding: 16px 18px;
+          box-shadow: var(--shadow-sm); position: relative; overflow: hidden;
+          transition: box-shadow .2s, transform .2s; cursor: default;
+        }
+        .kpi-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+        .kpi-card::after {
+          content: ''; position: absolute; bottom: 0; left: 0;
+          width: 100%; height: 3px;
+        }
+        .kpi-card.gap::after    { background: var(--gap); }
+        .kpi-card.athleta::after { background: var(--athleta); }
+        .kpi-card.oldnavy::after { background: var(--oldnavy); }
+        .kpi-card.banana::after  { background: var(--banana); }
+        .kpi-icon { width: 28px; height: 28px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 13px; margin-bottom: 8px; }
+        .kpi-card.gap .kpi-icon    { background: var(--gap-light);     color: var(--gap); }
+        .kpi-card.athleta .kpi-icon { background: var(--athleta-light); color: var(--athleta); }
+        .kpi-card.oldnavy .kpi-icon { background: var(--oldnavy-light); color: var(--oldnavy); }
+        .kpi-card.banana .kpi-icon  { background: var(--banana-light);  color: var(--banana); }
+        .kpi-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 3px; font-family: var(--font-mono); }
+        .kpi-value { font-size: 32px; font-weight: 700; line-height: 1; }
+        .kpi-card.gap .kpi-value    { color: var(--gap); }
+        .kpi-card.athleta .kpi-value { color: var(--athleta); }
+        .kpi-card.oldnavy .kpi-value { color: var(--oldnavy); }
+        .kpi-card.banana .kpi-value  { color: var(--banana); }
+        .kpi-sub { font-size: 10px; color: var(--muted); margin-top: 3px; }
+
+        /* ── Controls ── */
+        .controls { display: flex; align-items: center; gap: 7px; margin-bottom: 16px; flex-wrap: wrap; }
+        .controls-label { font-size: 11px; color: var(--muted); font-family: var(--font-mono); letter-spacing: 1px; }
+        .filter-btn {
+          display: flex; align-items: center; gap: 6px;
+          padding: 6px 14px; border-radius: 100px;
+          border: 1.5px solid var(--border2); background: var(--white);
+          color: var(--text2); font-family: var(--font); font-size: 12px;
+          font-weight: 500; cursor: pointer; transition: all .15s;
+          box-shadow: var(--shadow-sm);
+        }
+        .filter-btn .dot { width: 7px; height: 7px; border-radius: 50%; }
+        .filter-btn:hover { background: var(--surface2); }
+        .filter-btn[data-brand="all"].active    { border-color: var(--allbrands); color: var(--allbrands); background: var(--allbrands-light); }
+        .filter-btn[data-brand="gap"].active    { border-color: var(--gap);       color: var(--gap);       background: var(--gap-light); }
+        .filter-btn[data-brand="athleta"].active { border-color: var(--athleta);   color: var(--athleta);   background: var(--athleta-light); }
+        .filter-btn[data-brand="oldnavy"].active { border-color: var(--oldnavy);   color: var(--oldnavy);   background: var(--oldnavy-light); }
+        .filter-btn[data-brand="banana"].active  { border-color: var(--banana);    color: var(--banana);    background: var(--banana-light); }
+        .search-wrap { margin-left: auto; position: relative; }
+        .search-wrap input {
+          background: var(--white); border: 1.5px solid var(--border2);
+          border-radius: 100px; padding: 6px 14px 6px 32px;
+          font-family: var(--font); font-size: 12px; color: var(--text);
+          outline: none; width: 180px; box-shadow: var(--shadow-sm);
+          transition: border-color .2s, width .3s;
+        }
+        .search-wrap input:focus { border-color: var(--accent); width: 220px; }
+        .search-wrap input::placeholder { color: var(--muted); }
+        .search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 14px; pointer-events: none; }
+
+        /* ── Summary bar ── */
+        .summary-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+        .result-count { font-size: 12px; color: var(--muted); font-family: var(--font-mono); }
+        .result-count span { color: var(--text); font-weight: 600; }
+        .legend { display: flex; gap: 14px; }
+        .legend-item { display: flex; align-items: center; gap: 5px; font-size: 10px; color: var(--muted); font-family: var(--font-mono); }
+        .legend-chip { width: 9px; height: 9px; border-radius: 3px; }
+
+        /* ── Calendar Grid ── */
+        .calendar-grid { display: flex; flex-direction: column; gap: 8px; }
+        .month-group {
+          background: var(--white); border: 1px solid var(--border);
+          border-radius: var(--radius); box-shadow: var(--shadow-sm);
+          overflow: hidden; transition: box-shadow .2s;
+        }
+        .month-group:hover { box-shadow: var(--shadow-md); }
+        .month-header {
+          display: flex; align-items: center; gap: 14px;
+          padding: 12px 20px; cursor: pointer; user-select: none;
+          transition: background .15s; border-left: 4px solid transparent;
+        }
+        .month-header:hover { background: var(--surface2); }
+        .month-group.has-gap .month-header      { border-left-color: var(--gap); }
+        .month-group.has-athleta .month-header  { border-left-color: var(--athleta); }
+        .month-group.has-oldnavy .month-header  { border-left-color: var(--oldnavy); }
+        .month-group.has-banana .month-header   { border-left-color: var(--banana); }
+        .month-group.has-multi .month-header    { border-left-color: var(--allbrands); }
+        .month-name { font-size: 15px; font-weight: 700; color: var(--text); min-width: 140px; }
+        .month-count {
+          font-family: var(--font-mono); font-size: 10px; color: var(--muted);
+          background: var(--surface2); padding: 2px 8px; border-radius: 100px;
+          border: 1px solid var(--border);
+        }
+        .month-brand-pips { display: flex; gap: 5px; align-items: center; flex: 1; }
+        .brand-pip { width: 7px; height: 7px; border-radius: 50%; }
+        .chevron { color: var(--muted); font-size: 10px; margin-left: auto; transition: transform .3s; display: inline-block; }
+        .month-group.collapsed .chevron { transform: rotate(-90deg); }
+        .events-container { overflow: hidden; transition: max-height .4s cubic-bezier(.4,0,.2,1); border-top: 1px solid var(--border); }
+        .month-group.collapsed .events-container { max-height: 0 !important; border-top: none; }
+        .col-headers {
+          display: grid; grid-template-columns: 150px 1fr 160px 160px;
+          gap: 14px; padding: 7px 20px;
+          background: var(--surface2); border-bottom: 1px solid var(--border);
+        }
+        .col-header { font-size: 10px; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted); }
+        .event-row {
+          display: grid; grid-template-columns: 150px 1fr 160px 160px;
+          align-items: center; padding: 11px 20px; gap: 14px;
+          border-bottom: 1px solid var(--border); transition: background .12s;
+        }
+        .event-row:last-child { border-bottom: none; }
+        .event-row:hover { background: #fafbfc; }
+        .brand-badge {
+          display: inline-flex; align-items: center; gap: 5px;
+          padding: 3px 10px; border-radius: 6px; font-size: 10px;
+          font-weight: 700; letter-spacing: 0.3px;
+          font-family: var(--font-mono); white-space: nowrap;
+        }
+        .brand-badge .b-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+        .badge-gap     { background: var(--gap-light);     color: var(--gap); }
+        .badge-athleta { background: var(--athleta-light); color: var(--athleta); }
+        .badge-oldnavy { background: var(--oldnavy-light); color: var(--oldnavy); }
+        .badge-banana  { background: var(--banana-light);  color: var(--banana); }
+        .event-name  { font-size: 13px; font-weight: 600; color: var(--text); }
+        .event-type  { font-size: 10px; color: var(--muted); margin-top: 2px; font-family: var(--font-mono); }
+        .event-notes { font-size: 11px; color: var(--text2); }
+        .status-chip {
+          display: inline-flex; align-items: center; gap: 4px;
+          font-size: 10px; font-family: var(--font-mono);
+          padding: 3px 9px; border-radius: 6px; white-space: nowrap;
+        }
+        .status-chip.active   { background: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9; }
+        .status-chip.upcoming { background: #e8eef8; color: #1a4fa8; border: 1px solid #c5d5f0; }
+        .status-chip.extended { background: #ede7f6; color: #5c35b5; border: 1px solid #d1c4e9; }
+
+        /* ── No results ── */
+        .no-results { text-align: center; padding: 48px; color: var(--muted); display: none; background: var(--white); border-radius: var(--radius); border: 1px solid var(--border); }
+        .no-results.visible { display: block; }
+
+        /* ── Footer ── */
+        .footer { margin-top: 20px; display: flex; align-items: center; justify-content: space-between; padding-top: 16px; border-top: 1px solid var(--border); }
+        .footer-left { display: flex; align-items: center; gap: 8px; }
+        .footer-logo { background: var(--accent); color: white; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 5px; letter-spacing: 1px; }
+        .footer-text { font-size: 11px; color: var(--muted); }
+
+        @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.8)} }
+
+        @media (max-width: 800px) {
+          .kpi-strip { grid-template-columns: 1fr 1fr; }
+          .event-row, .col-headers { grid-template-columns: 130px 1fr; }
+          .event-notes, .event-row > :last-child,
+          .col-headers > :nth-child(3), .col-headers > :nth-child(4) { display: none; }
+          .header { flex-direction: column; gap: 12px; }
+          .search-wrap { margin-left: 0; }
+          .search-wrap input { width: 100%; }
+          .legend { display: none; }
+        }
+    </style>
+</head>
+<body>
+<div class="widget-wrap" id="widget-wrap">
+
+    <div class="header">
+        <div class="header-left">
+            <div class="eyebrow"><span class="eyebrow-dot"></span> Project Yale · Gap Inc. Brands</div>
+            <div class="title">Peak Season <em>Calendar</em></div>
+        </div>
+        <div class="header-right">
+            <div class="live-badge"><span class="live-dot"></span> ACTIVE SEASON</div>
+            <div class="updated-text">Updated Feb 19, 2026</div>
+        </div>
+    </div>
+
+    <div class="kpi-strip">
+        <div class="kpi-card gap">
+            <div class="kpi-icon">◈</div>
+            <div class="kpi-label">Gap Events</div>
+            <div class="kpi-value" id="kpi-gap">14</div>
+            <div class="kpi-sub">Earn/Redeem + F&F</div>
+        </div>
+        <div class="kpi-card athleta">
+            <div class="kpi-icon">◈</div>
+            <div class="kpi-label">Athleta Events</div>
+            <div class="kpi-value" id="kpi-athleta">6</div>
+            <div class="kpi-sub">Friends & Family + Semi-Annual</div>
+        </div>
+        <div class="kpi-card oldnavy">
+            <div class="kpi-icon">◈</div>
+            <div class="kpi-label">Old Navy Events</div>
+            <div class="kpi-value" id="kpi-oldnavy">9</div>
+            <div class="kpi-sub">SuperCash + Card Appreciation</div>
+        </div>
+        <div class="kpi-card banana">
+            <div class="kpi-icon">◈</div>
+            <div class="kpi-label">Banana Republic</div>
+            <div class="kpi-value" id="kpi-banana">4</div>
+            <div class="kpi-sub">Prime Event + SuperCash</div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <span class="controls-label">FILTER:</span>
+        <button class="filter-btn active" data-brand="all" onclick="filterBrand('all',this)"><span class="dot" style="background:var(--allbrands)"></span> All Brands</button>
+        <button class="filter-btn" data-brand="gap" onclick="filterBrand('gap',this)"><span class="dot" style="background:var(--gap)"></span> Gap</button>
+        <button class="filter-btn" data-brand="athleta" onclick="filterBrand('athleta',this)"><span class="dot" style="background:var(--athleta)"></span> Athleta</button>
+        <button class="filter-btn" data-brand="oldnavy" onclick="filterBrand('oldnavy',this)"><span class="dot" style="background:var(--oldnavy)"></span> Old Navy</button>
+        <button class="filter-btn" data-brand="banana" onclick="filterBrand('banana',this)"><span class="dot" style="background:var(--banana)"></span> Banana Rep.</button>
+        <div class="search-wrap">
+            <span class="search-icon">&#9906;</span>
+            <input type="text" id="search-input" placeholder="Search events…" oninput="searchEvents(this.value)">
+        </div>
+    </div>
+
+    <div class="summary-bar">
+        <div class="result-count">Showing <span id="event-count">32</span> events across <span id="month-count">12</span> months</div>
+        <div class="legend">
+            <div class="legend-item"><span class="legend-chip" style="background:#e8f5e9;border:1px solid #c8e6c9"></span>Active</div>
+            <div class="legend-item"><span class="legend-chip" style="background:#e8eef8;border:1px solid #c5d5f0"></span>Upcoming</div>
+            <div class="legend-item"><span class="legend-chip" style="background:#ede7f6;border:1px solid #d1c4e9"></span>Extended</div>
+        </div>
+    </div>
+
+    <div class="calendar-grid" id="calendar-grid"></div>
+    <div class="no-results" id="no-results"><div>No events match your search or filter.</div></div>
+
+    <div class="footer">
+        <div class="footer-left">
+            <span class="footer-logo">YALE</span>
+            <span class="footer-text">Tools Team · Transition Dashboard</span>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // ── Data ─────────────────────────────────────────────────────────────────────
+    const events = [
+      { month:"February – March", brand:"gap",     name:"GapCash Earn/Redeem",             type:"Earn & Redeem",   notes:"Varies by promotional cadence", status:"active"   },
+      { month:"March",            brand:"athleta", name:"Friends & Family",                type:"Friends & Family",notes:"",                              status:"upcoming" },
+      { month:"March",            brand:"banana",  name:"Friends & Family",                type:"Friends & Family",notes:"",                              status:"upcoming" },
+      { month:"March",            brand:"gap",     name:"Friends & Family",                type:"Friends & Family",notes:"",                              status:"upcoming" },
+      { month:"March",            brand:"gap",     name:"GapCash Earn/Redeem",             type:"Earn & Redeem",   notes:"",                              status:"upcoming" },
+      { month:"March",            brand:"oldnavy", name:"Friends & Family",                type:"Friends & Family",notes:"",                              status:"upcoming" },
+      { month:"March",            brand:"oldnavy", name:"SuperCash Earn (US/COA)",         type:"SuperCash",       notes:"",                              status:"upcoming" },
+      { month:"March",            brand:"oldnavy", name:"Cyber Easter (US/COA)",           type:"Promotional",     notes:"",                              status:"upcoming" },
+      { month:"March – April",    brand:"oldnavy", name:"Card Appreciation Month",         type:"Card Benefit",    notes:"Spans both months",             status:"extended" },
+      { month:"March – April",    brand:"oldnavy", name:"Cyber Easter (extends into Apr)", type:"Promotional",     notes:"Continues from March",          status:"extended" },
+      { month:"May",              brand:"gap",     name:"Cyber Easter",                    type:"Promotional",     notes:"Spans both months",             status:"upcoming" },
+      { month:"June",             brand:"gap",     name:"Friends & Family",                type:"Friends & Family",notes:"",                              status:"upcoming" },
+      { month:"June",             brand:"gap",     name:"GapCash Earn/Redeem",             type:"Earn & Redeem",   notes:"",                              status:"upcoming" },
+      { month:"June",             brand:"athleta", name:"Semi-Annual Sale",                type:"Sale",            notes:"",                              status:"upcoming" },
+      { month:"June",             brand:"oldnavy", name:"SuperCash Earn (US/COA)",         type:"SuperCash",       notes:"Continues into July",           status:"extended" },
+      { month:"July",             brand:"gap",     name:"Friends & Family",                type:"Friends & Family",notes:"",                              status:"upcoming" },
+      { month:"July",             brand:"athleta", name:"Semi-Annual Sale",                type:"Sale",            notes:"",                              status:"upcoming" },
+      { month:"July",             brand:"oldnavy", name:"Semi-Annual Sale",                type:"Sale",            notes:"",                              status:"upcoming" },
+      { month:"July",             brand:"oldnavy", name:"SuperCash Redeem (US/COA)",       type:"SuperCash",       notes:"",                              status:"upcoming" },
+      { month:"August",           brand:"banana",  name:"Prime Event",                     type:"Prime Event",     notes:"",                              status:"upcoming" },
+      { month:"August",           brand:"gap",     name:"Friends & Family",                type:"Friends & Family",notes:"",                              status:"upcoming" },
+      { month:"September",        brand:"gap",     name:"GapCash Earn/Redeem",             type:"Earn & Redeem",   notes:"",                              status:"upcoming" },
+      { month:"October",          brand:"oldnavy", name:"SuperCash Earn (US/COA)",         type:"SuperCash",       notes:"",                              status:"upcoming" },
+      { month:"November",         brand:"gap",     name:"Friends & Family",                type:"Friends & Family",notes:"Black Friday / Holiday",        status:"upcoming" },
+      { month:"November",         brand:"gap",     name:"GapCash Earn/Redeem",             type:"Earn & Redeem",   notes:"",                              status:"upcoming" },
+      { month:"November",         brand:"oldnavy", name:"SuperCash Redeem (US/COA)",       type:"SuperCash",       notes:"",                              status:"upcoming" },
+      { month:"November",         brand:"banana",  name:"SuperCash Redeem (US/COA)",       type:"SuperCash",       notes:"",                              status:"upcoming" },
+      { month:"December",         brand:"gap",     name:"Friends & Family",                type:"Friends & Family",notes:"Holiday",                       status:"upcoming" },
+      { month:"December",         brand:"athleta", name:"Friends & Family",                type:"Friends & Family",notes:"",                              status:"upcoming" },
+      { month:"December",         brand:"oldnavy", name:"Friends & Family",                type:"Friends & Family",notes:"",                              status:"upcoming" },
+      { month:"December",         brand:"banana",  name:"Friends & Family",                type:"Friends & Family",notes:"Holiday",                       status:"upcoming" },
+    ];
+
+    const brandColors = { gap:'#1a6ef5', athleta:'#c2185b', oldnavy:'#00875a', banana:'#d4830a' };
+    const brandLabels = { gap:'GAP', athleta:'ATHLETA', oldnavy:'OLD NAVY', banana:'BANANA REP.' };
+    const statusLabels = { active:'● ACTIVE', upcoming:'◎ UPCOMING', extended:'↔ EXTENDED' };
+
+    let activeFilter = 'all';
+    let activeSearch = '';
+
+    // ── Auto-resize: tells the parent SharePoint page how tall this iframe is ──
+    function notifyHeight() {
+      const h = document.getElementById('widget-wrap').scrollHeight + 40;
+      // postMessage to SharePoint parent
+      try { window.parent.postMessage({ type: 'iframeHeight', height: h }, '*'); } catch(e) {}
+      // Also set own iframe element if accessible
+      try { window.frameElement && (window.frameElement.style.height = h + 'px'); } catch(e) {}
+    }
+
+    function buildCalendar() {
+      const grid = document.getElementById('calendar-grid');
+      grid.innerHTML = '';
+
+      const months = {}, monthOrder = [];
+      events.forEach(e => {
+        if (!months[e.month]) { months[e.month] = []; monthOrder.push(e.month); }
+        months[e.month].push(e);
+      });
+
+      let totalEvents = 0, totalMonths = 0, anyVisible = false;
+
+      monthOrder.forEach(month => {
+        const visible = months[month].filter(e =>
+          (activeFilter === 'all' || e.brand === activeFilter) &&
+          (!activeSearch || e.name.toLowerCase().includes(activeSearch) || e.type.toLowerCase().includes(activeSearch))
+        );
+        if (!visible.length) return;
+        anyVisible = true;
+        totalEvents += visible.length;
+        totalMonths++;
+
+        const brands = [...new Set(visible.map(e => e.brand))];
+        const multiClass = brands.length > 1 ? 'has-multi' : `has-${brands[0]}`;
+        const group = document.createElement('div');
+        group.className = `month-group ${multiClass}`;
+        group.innerHTML = `
+          <div class="month-header" onclick="toggleMonth(this)">
+            <span class="month-name">${month}</span>
+            <span class="month-count">${visible.length} event${visible.length!==1?'s':''}</span>
+            <div class="month-brand-pips">${brands.map(b=>`<span class="brand-pip" style="background:${brandColors[b]}"></span>`).join('')}</div>
+            <span class="chevron">&#9660;</span>
+          </div>
+          <div class="events-container" style="max-height:${visible.length*66+36}px">
+            <div class="col-headers">
+              <div class="col-header">Brand</div>
+              <div class="col-header">Event</div>
+              <div class="col-header">Notes</div>
+              <div class="col-header">Status</div>
+            </div>
+            ${visible.map(e=>`
+              <div class="event-row">
+                <div><span class="brand-badge badge-${e.brand}"><span class="b-dot" style="background:${brandColors[e.brand]}"></span>${brandLabels[e.brand]}</span></div>
+                <div><div class="event-name">${e.name}</div><div class="event-type">${e.type}</div></div>
+                <div class="event-notes">${e.notes||'—'}</div>
+                <div><span class="status-chip ${e.status}">${statusLabels[e.status]}</span></div>
+              </div>`).join('')}
+          </div>`;
+        grid.appendChild(group);
+      });
+
+      document.getElementById('event-count').textContent = totalEvents;
+      document.getElementById('month-count').textContent = totalMonths;
+      document.getElementById('no-results').classList.toggle('visible', !anyVisible);
+
+      // Notify parent of new height after render
+      setTimeout(notifyHeight, 50);
+    }
+
+    function filterBrand(brand, btn) {
+      activeFilter = brand;
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      buildCalendar();
+    }
+
+    function searchEvents(val) {
+      activeSearch = val.toLowerCase().trim();
+      buildCalendar();
+    }
+
+    function toggleMonth(header) {
+      header.parentElement.classList.toggle('collapsed');
+      setTimeout(notifyHeight, 420); // wait for CSS transition to finish
+    }
+
+    // ── Init ─────────────────────────────────────────────────────────────────────
+    buildCalendar();
+    window.addEventListener('load', notifyHeight);
+    window.addEventListener('resize', notifyHeight);
+</script>
+</body>
+</html>
