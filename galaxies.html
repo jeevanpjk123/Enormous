@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galaxies | Enormous</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #ff003d;
+            --secondary-color: #00f7ff;
+            --dark-bg: #0a0a0a;
+            --text-light: #ffffff;
+            --text-muted: #aaaaaa;
+        }
+
+        body {
+            background: var(--dark-bg); /* Base background */
+            color: var(--text-light);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+        }
+
+        /* --- CSS Starfield Background --- */
+        /* Creates multiple layers of stars using box-shadow */
+        @keyframes moveStars {
+            from { transform: translateY(0px); }
+            to   { transform: translateY(-1000px); } /* Adjust speed/distance */
+        }
+
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Behind content */
+            overflow: hidden;
+        }
+
+        .stars div {
+            position: absolute;
+            width: 1px; height: 1px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: /* Layer 1 (Smallest/Farthest) */
+                        600px 800px white, 200px 300px white, 900px 100px white,
+                        /* Add many more random positions */
+                        1200px 500px white, 50px 950px white, 750px 250px white;
+            animation: moveStars 50s linear infinite; /* Adjust duration for speed */
+        }
+        .stars div:nth-child(2) { /* Layer 2 (Slightly larger/closer) */
+             width: 2px; height: 2px;
+             box-shadow: /* Different positions */
+                         100px 200px white, 800px 600px white, 450px 850px white,
+                         1100px 150px white, 300px 700px white, 950px 400px white;
+             animation: moveStars 100s linear infinite; /* Slower movement */
+        }
+         .stars div:nth-child(3) { /* Layer 3 (Largest/Closest) */
+             width: 3px; height: 3px;
+             box-shadow: /* Different positions */
+                         500px 100px white, 1000px 900px white, 150px 650px white,
+                         700px 350px white, 1150px 750px white, 250px 450px white;
+             animation: moveStars 150s linear infinite; /* Slowest movement */
+         }
+        /* --- End CSS Starfield --- */
+
+
+        /* --- Consistent Header (Copy from index.html or abstract to CSS file) --- */
+         header {
+            position: sticky; /* Sticky header */
+            top: 0;
+            width: 100%;
+            padding: 1rem 1.5rem;
+            z-index: 1000;
+            background: rgba(10, 10, 10, 0.9); /* Slightly transparent */
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+         .logo h1 { margin: 0; font-size: 1.8rem; color: var(--primary-color); font-weight: bold; letter-spacing: 1px; }
+         .nav-links { display: flex; gap: 2rem; list-style: none; padding: 0; margin: 0; }
+         .nav-links a { color: var(--text-light); text-decoration: none; transition: color 0.3s ease; padding: 0.5rem 0; }
+         .nav-links a:hover { color: var(--primary-color); }
+        /* Add Hamburger styles if needed for mobile consistency */
+        .hamburger { display: none; /* Show on mobile via media query */ }
+         /* --- End Header --- */
+
+        /* Main Content Area */
+         main {
+            padding: 3rem 2rem;
+            max-width: 1200px;
+            margin: 2rem auto; /* Add margin to avoid overlap with sticky header */
+            position: relative; /* Ensure content is above fixed background */
+            z-index: 1;
+         }
+
+        h2.page-title { /* Specific class for page title */
+            font-size: clamp(2.2rem, 5vw, 3.5rem);
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        p.intro-text {
+            max-width: 800px;
+            margin: 0 auto 3rem auto;
+            text-align: center;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* Gallery Styles */
+        .gallery {
+            display: grid; /* Use Grid for more flexibility */
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); /* Responsive columns */
+            gap: 2.5rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .gallery-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.4s ease, box-shadow 0.4s ease, filter 0.4s ease;
+            backdrop-filter: blur(5px);
+        }
+        .gallery-item:hover {
+             transform: scale(1.03); /* Slight zoom on hover */
+             box-shadow: 0 8px 25px rgba(0, 247, 255, 0.15); /* Glow */
+             filter: brightness(1.1); /* Slightly brighten */
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 250px; /* Fixed height for consistency */
+            object-fit: cover; /* Crop images nicely */
+            display: block;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .desc {
+            padding: 1.5rem;
+        }
+        .desc strong {
+            color: var(--text-light);
+            font-size: 1.2rem;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        .desc p { /* Style for description text */
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin-bottom: 0.8rem;
+        }
+        .desc small {
+            font-size: 0.8rem;
+            color: #888;
+            display: block;
+            margin-top: 1rem;
+        }
+
+        /* --- Scroll Animation Styles --- */
+        .hidden {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            will-change: opacity, transform;
+        }
+        .visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+
+        /* Mobile Styles */
+        @media (max-width: 768px) {
+             main { padding: 2rem 1rem; }
+             .gallery { grid-template-columns: 1fr; /* Stack on mobile */ }
+             h2.page-title { font-size: 2rem; }
+             /* Add mobile header/nav styles if needed */
+        }
+
+    </style>
+</head>
+<body>
+<!-- Starfield Background -->
+<div class="stars">
+    <div></div>
+    <div></div>
+    <div></div>
+</div>
+
+<header>
+    <nav>
+        <div class="logo"><h1>ENORMOUS</h1></div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="galaxies.html">Galaxies</a></li>
+            <li><a href="universe.html">Universe</a></li>
+            <!-- Add other relevant links if needed -->
+        </ul>
+        <!-- <div class="hamburger">☰</div> --> <!-- Uncomment if needed -->
+    </nav>
+</header>
+
+<main>
+    <h2 class="page-title">Galaxies: Islands of Stars</h2>
+    <p class="intro-text">
+        Galaxies are vast cosmic structures containing billions to trillions of stars, interstellar gas, dust, and dark matter, all bound by gravity. They exhibit a stunning variety of shapes and sizes, from elegant spirals like our own Milky Way to massive ellipticals and chaotic irregulars. Explore some breathtaking examples captured through humanity's most powerful telescopes.
+    </p>
+
+    <div class="gallery">
+        <!-- Use 'hidden' class for scroll animation -->
+        <div class="gallery-item hidden">
+            <img src="https://cdn.spacetelescope.org/archives/images/wallpaper2/heic0602a.jpg" alt="Pinwheel Galaxy (M101)">
+            <div class="desc">
+                <strong>Pinwheel Galaxy (M101)</strong>
+                <p>A grand design spiral galaxy famed for its well-defined arms and vast star-forming regions. This is one of the largest and most detailed galaxy portraits by Hubble.</p>
+                <small>Credit: NASA, ESA, K. Kuntz (JHU), F. Bresolin (U Hawaii), J. Trauger (JPL), J. Mould (NOAO), Y.-H. Chu (U Illinois), STScI</small>
+            </div>
+        </div>
+
+        <div class="gallery-item hidden">
+            <img src="https://cdn.spacetelescope.org/archives/images/wallpaper2/heic1502a.jpg" alt="Andromeda Galaxy (M31)">
+            <div class="desc">
+                <strong>Andromeda Galaxy (M31)</strong>
+                <p>Our closest large galactic neighbor, hurtling towards the Milky Way for an eventual cosmic collision billions of years from now. It contains over a trillion stars.</p>
+                <small>Credit: NASA, ESA, J. Dalcanton, B.F. Williams, L.C. Johnson (U Washington), PHAT team, R. Gendler</small>
+            </div>
+        </div>
+
+        <div class="gallery-item hidden">
+            <img src="https://cdn.spacetelescope.org/archives/images/wallpaper2/opo0328a.jpg" alt="Antennae Galaxies">
+            <div class="desc">
+                <strong>Antennae Galaxies (NGC 4038/4039)</strong>
+                <p>A stunning example of galactic interaction. These two galaxies are deep in the process of merging, their collision triggering massive bursts of star formation.</p>
+                <small>Credit: NASA, ESA, and B. Whitmore (STScI); G. Trancho (Northern Arizona University)</small>
+            </div>
+        </div>
+
+        <div class="gallery-item hidden">
+            <img src="https://cdn.spacetelescope.org/archives/images/wallpaper2/opo9919i.jpg" alt="Sombrero Galaxy (M104)">
+            <div class="desc">
+                <strong>Sombrero Galaxy (M104)</strong>
+                <p>Known for its bright nucleus, large central bulge, and prominent dust lane, giving it the appearance of a sombrero hat. It's an unbarred spiral galaxy.</p>
+                <small>Credit: NASA/ESA and The Hubble Heritage Team (STScI/AURA)</small>
+            </div>
+        </div>
+
+        <div class="gallery-item hidden">
+            <img src="https://cdn.spacetelescope.org/archives/images/wallpaper2/heic0715a.jpg" alt="Whirlpool Galaxy (M51)">
+            <div class="desc">
+                <strong>Whirlpool Galaxy (M51)</strong>
+                <p>A classic spiral galaxy interacting with its smaller companion, NGC 5195. Its distinct structure makes it a favorite target for astronomers studying galactic evolution.</p>
+                <small>Credit: NASA, ESA, S. Beckwith (STScI), and The Hubble Heritage Team (STScI/AURA)</small>
+            </div>
+        </div>
+
+        <div class="gallery-item hidden">
+            <img src="https://cdn.spacetelescope.org/archives/images/wallpaper2/heic1914a.jpg" alt="Centaurus A (NGC 5128)">
+            <div class="desc">
+                <strong>Centaurus A (NGC 5128)</strong>
+                <p>A peculiar galaxy, likely the result of a merger between an elliptical and a spiral galaxy. It's notable for its strong radio emissions powered by a supermassive black hole.</p>
+                <small>Credit: NASA, ESA, and the Hubble Heritage (STScI/AURA)-ESA/Hubble Collaboration</small>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+    // --- Scroll Reveal Animation (Same as index.html) ---
+     const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                 // observer.unobserve(entry.target); // Optional: Stop observing
+            } else {
+                // entry.target.classList.remove('visible'); // Optional: Replay animation
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.hidden').forEach(el => observer.observe(el));
+
+    // Add Hamburger Menu JS if implemented in header
+</script>
+<!-- Three.js Library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+    // --- 3D Black Hole Background ---
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000);
+    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.getElementById('blackhole-bg').appendChild(renderer.domElement);
+
+    // Black Hole Geometry and Material
+    const blackHoleGeometry = new THREE.SphereGeometry(2.5, 64, 64);
+    const blackHoleMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
+    const blackHole = new THREE.Mesh(blackHoleGeometry, blackHoleMaterial);
+    scene.add(blackHole);
+
+    // Accretion Disk
+    const diskGeometry = new THREE.RingGeometry(2.6, 3.5, 64);
+    const diskMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000, side: THREE.DoubleSide });
+    const accretionDisk = new THREE.Mesh(diskGeometry, diskMaterial);
+    accretionDisk.rotation.x = Math.PI / 2;
+    scene.add(accretionDisk);
+
+    // Starfield
+    const starGeometry = new THREE.BufferGeometry();
+    const starCount = 10000;
+    const posArray = new Float32Array(starCount * 3);
+    for (let i = 0; i < starCount * 3; i++) {
+      posArray[i] = (Math.random() - 0.5) * 1000;
+    }
+    starGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+    const starMaterial = new THREE.PointsMaterial({ size: 0.25, color: 0xffffff, transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending });
+    const starMesh = new THREE.Points(starGeometry, starMaterial);
+    scene.add(starMesh);
+
+    // Lighting
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
+    scene.add(ambientLight);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1.0);
+    directionalLight.position.set(5, 3, 5);
+    scene.add(directionalLight);
+
+    // Camera Position
+    camera.position.z = 6;
+
+    // Animation Loop
+    const clock = new THREE.Clock();
+    function animate() {
+      requestAnimationFrame(animate);
+      const elapsedTime = clock.getElapsedTime();
+      blackHole.rotation.y += 0.0005;
+      accretionDisk.rotation.z += 0.001;
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    // Responsive Resize
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+</script>
+
+</body>
+</html>
