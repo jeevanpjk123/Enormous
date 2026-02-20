@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Universe Mysteries | Enormous</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <!-- Paste the EXACT SAME <style> block from galaxies.html here -->
+  <style>
+    :root {
+        --primary-color: #ff003d;
+        --secondary-color: #00f7ff;
+        --dark-bg: #0a0a0a;
+        --text-light: #ffffff;
+        --text-muted: #aaaaaa;
+    }
+
+    body {
+        background: var(--dark-bg); /* Base background */
+        color: var(--text-light);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        overflow-x: hidden; /* Prevent horizontal scroll */
+    }
+
+    /* --- CSS Starfield Background --- */
+    @keyframes moveStars {
+        from { transform: translateY(0px); }
+        to   { transform: translateY(-1000px); } /* Adjust speed/distance */
+    }
+    .stars { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden; }
+    .stars div { position: absolute; width: 1px; height: 1px; background: white; border-radius: 50%; box-shadow: 600px 800px white, 200px 300px white, 900px 100px white, 1200px 500px white, 50px 950px white, 750px 250px white; animation: moveStars 50s linear infinite; }
+    .stars div:nth-child(2) { width: 2px; height: 2px; box-shadow: 100px 200px white, 800px 600px white, 450px 850px white, 1100px 150px white, 300px 700px white, 950px 400px white; animation: moveStars 100s linear infinite; }
+    .stars div:nth-child(3) { width: 3px; height: 3px; box-shadow: 500px 100px white, 1000px 900px white, 150px 650px white, 700px 350px white, 1150px 750px white, 250px 450px white; animation: moveStars 150s linear infinite; }
+    /* --- End CSS Starfield --- */
+
+    /* --- Consistent Header --- */
+     header { position: sticky; top: 0; width: 100%; padding: 1rem 1.5rem; z-index: 1000; background: rgba(10, 10, 10, 0.9); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+    nav { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; }
+     .logo h1 { margin: 0; font-size: 1.8rem; color: var(--primary-color); font-weight: bold; letter-spacing: 1px; }
+     .nav-links { display: flex; gap: 2rem; list-style: none; padding: 0; margin: 0; }
+     .nav-links a { color: var(--text-light); text-decoration: none; transition: color 0.3s ease; padding: 0.5rem 0; }
+     .nav-links a:hover { color: var(--primary-color); }
+    .hamburger { display: none; }
+     /* --- End Header --- */
+
+    /* Main Content Area */
+     main { padding: 3rem 2rem; max-width: 1200px; margin: 2rem auto; position: relative; z-index: 1; }
+    h2.page-title { font-size: clamp(2.2rem, 5vw, 3.5rem); color: var(--primary-color); text-align: center; margin-bottom: 1.5rem; }
+    p.intro-text { max-width: 800px; margin: 0 auto 3rem auto; text-align: center; color: var(--text-muted); line-height: 1.6; }
+
+    /* Gallery Styles */
+    .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2.5rem; justify-content: center; margin-top: 2rem; }
+    .gallery-item { background: rgba(255, 255, 255, 0.05); border-radius: 10px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.1); transition: transform 0.4s ease, box-shadow 0.4s ease, filter 0.4s ease; backdrop-filter: blur(5px); }
+    .gallery-item:hover { transform: scale(1.03); box-shadow: 0 8px 25px rgba(0, 247, 255, 0.15); filter: brightness(1.1); }
+    .gallery-item img { width: 100%; height: 250px; object-fit: cover; display: block; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+    .desc { padding: 1.5rem; }
+    .desc strong { color: var(--text-light); font-size: 1.2rem; display: block; margin-bottom: 0.5rem; }
+    .desc p { font-size: 0.95rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 0.8rem; }
+    .desc small { font-size: 0.8rem; color: #888; display: block; margin-top: 1rem; }
+
+     /* Additional Section for Mysteries */
+     .mysteries-section {
+         background: rgba(255, 255, 255, 0.03);
+         padding: 2rem;
+         border-radius: 10px;
+         margin-top: 4rem;
+         border: 1px solid rgba(255, 255, 255, 0.1);
+     }
+     .mysteries-section h3 {
+         color: var(--secondary-color); /* Use secondary color */
+         text-align: center;
+         margin-bottom: 1.5rem;
+         font-size: 1.8rem;
+     }
+     .mysteries-list {
+         list-style: none;
+         padding: 0;
+         max-width: 600px;
+         margin: 0 auto;
+     }
+     .mysteries-list li {
+         padding: 0.8rem 0;
+         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+         color: var(--text-muted);
+     }
+      .mysteries-list li:last-child {
+         border-bottom: none;
+      }
+     .mysteries-list strong {
+         color: var(--text-light);
+     }
+      .mysteries-list a {
+         color: var(--secondary-color);
+         text-decoration: none;
+         transition: color 0.3s;
+      }
+      .mysteries-list a:hover {
+         color: var(--primary-color);
+      }
+
+    /* --- Scroll Animation Styles --- */
+    .hidden { opacity: 0; transform: translateY(50px); transition: opacity 0.8s ease-out, transform 0.8s ease-out; will-change: opacity, transform; }
+    .visible { opacity: 1; transform: translateY(0); }
+
+    /* Mobile Styles */
+    @media (max-width: 768px) {
+         main { padding: 2rem 1rem; }
+         .gallery { grid-template-columns: 1fr; }
+         h2.page-title { font-size: 2rem; }
+    }
+  </style>
+</head>
+<body>
+<!-- Starfield Background -->
+<div class="stars">
+  <div></div>
+  <div></div>
+  <div></div>
+</div>
+
+<header>
+  <nav>
+    <div class="logo"><h1>ENORMOUS</h1></div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="galaxies.html">Galaxies</a></li>
+      <li><a href="universe.html">Universe</a></li>
+    </ul>
+    <!-- <div class="hamburger">☰</div> -->
+  </nav>
+</header>
+
+<main>
+  <h2 class="page-title">The Universe & Its Profound Mysteries</h2>
+  <p class="intro-text">
+    From the infinitely small to the unimaginably large, the universe is a tapestry woven with phenomena that defy easy explanation. It challenges our understanding of space, time, matter, and energy. Join us in contemplating some of the grandest questions humanity asks about the cosmos.
+  </p>
+
+  <div class="gallery">
+    <div class="gallery-item hidden">
+      <!-- Find suitable image URL -->
+      <img src="https://cdn.spacetelescope.org/archives/images/wallpaper2/heic0406a.jpg" alt="Hubble Ultra Deep Field">
+      <div class="desc">
+        <strong>Hubble Ultra Deep Field</strong>
+        <p>Staring into a tiny patch of sky, Hubble revealed nearly 10,000 galaxies, some dating back near the beginning of time, offering a profound look into cosmic history.</p>
+        <small>Credit: NASA, ESA, S. Beckwith (STScI) and the HUDF Team</small>
+      </div>
+    </div>
+    <div class="gallery-item hidden">
+      <!-- Find suitable image URL -->
+      <img src="https://cdn.spacetelescope.org/archives/images/wallpaper2/heic1509a.jpg" alt="Pillars of Creation">
+      <div class="desc">
+        <strong>Pillars of Creation (Eagle Nebula)</strong>
+        <p>Iconic columns of cool interstellar hydrogen gas and dust acting as nurseries for new stars. These majestic structures are slowly being eroded by intense radiation from nearby stars.</p>
+        <small>Credit: NASA, ESA/Hubble and the Hubble Heritage Team</small>
+      </div>
+    </div>
+    <div class="gallery-item hidden">
+      <!-- Find suitable image URL -->
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Angular_power_spectrum_of_the_CMB.svg/1200px-Angular_power_spectrum_of_the_CMB.svg.png" alt="Cosmic Microwave Background">
+      <div class="desc">
+        <strong>Cosmic Microwave Background</strong>
+        <p>The faint afterglow radiation from the Big Bang, providing a snapshot of the universe in its infancy. Studying its tiny temperature fluctuations reveals clues about cosmic evolution.</p>
+        <small>Credit: ESA and the Planck Collaboration</small>
+      </div>
+    </div>
+    <div class="gallery-item hidden">
+      <!-- Find suitable image URL - e.g., Simulation of dark matter halo -->
+      <img src="https://upload.wikimedia.org/wikipedia/commons/e/e8/Dark_matter_halo_model.jpg" alt="Dark Matter Simulation">
+      <div class="desc">
+        <strong>Dark Matter Structure</strong>
+        <p>Invisible dark matter forms the cosmic web, a vast scaffolding upon which galaxies and galaxy clusters form. Its gravitational influence shapes the universe's large-scale structure.</p>
+        <small>Credit: Springel et al. (MPIA) & Illustris Collaboration</small>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section for Mysteries -->
+  <section class="mysteries-section hidden">
+    <h3>Unsolved Cosmic Conundrums</h3>
+    <ul class="mysteries-list">
+      <li><strong>Dark Matter & Dark Energy:</strong> What are these invisible components that constitute ~95% of the universe's total mass-energy budget? Their nature remains one of the biggest puzzles in physics. <small>[<a href="https://science.nasa.gov/universe/questions/" target="_blank">Learn More</a>]</small></li>
+      <li><strong>Black Hole Singularities:</strong> What happens at the center of a black hole where gravity becomes infinite and known laws of physics break down?</li>
+      <li><strong>The Origin & Fate of the Universe:</strong> While the Big Bang model is well-supported, what precisely triggered it? And will the universe expand forever, collapse, or tear itself apart?</li>
+      <li><strong>The Matter-Antimatter Asymmetry:</strong> Why is the universe dominated by matter when the Big Bang should have produced equal amounts of matter and antimatter?</li>
+      <li><strong>Are We Alone? (The Fermi Paradox):</strong> Given the vastness of the universe and the probability of Earth-like planets, why haven't we detected any signs of extraterrestrial intelligence?</li>
+      <li><strong>The Nature of Time:</strong> Is time fundamental, or an emergent property? Does it always flow forward?</li>
+    </ul>
+  </section>
+</main>
+
+<script>
+  // --- Scroll Reveal Animation (Same as index.html / galaxies.html) ---
+   const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+          if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+               // observer.unobserve(entry.target); // Optional: Stop observing
+          } else {
+              // entry.target.classList.remove('visible'); // Optional: Replay animation
+          }
+      });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.hidden').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
