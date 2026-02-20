@@ -3,458 +3,722 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-
-    <title>Project Yale – Peak Season Calendar</title>
+    <title>Space Exploration | Enormous</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
-          --bg: #f5f6f8;
-          --white: #ffffff;
-          --surface2: #f0f2f5;
-          --border: #e2e5ea;
-          --border2: #d0d4dc;
-          --text: #1a1d23;
-          --text2: #4a5060;
-          --muted: #8a909e;
-          --accent: #0f4c91;
-          --accent-light: #e8eef8;
-          --gap: #1a6ef5;
-          --gap-light: #e8f0fe;
-          --athleta: #c2185b;
-          --athleta-light: #fce4ec;
-          --oldnavy: #00875a;
-          --oldnavy-light: #e3f5ef;
-          --banana: #d4830a;
-          --banana-light: #fff3e0;
-          --allbrands: #5c35b5;
-          --allbrands-light: #ede7f6;
-          --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
-          --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
-          --radius: 12px;
-
-          /* System font stack — no Google Fonts needed */
-          --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-          --font-mono: 'Courier New', Courier, monospace;
+            --primary-color: #ff003d;
+            --secondary-color: #00f7ff;
+            --dark-bg: #0a0a0a;
+            --text-light: #ffffff;
+            --text-muted: #aaaaaa;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        /* KEY: html & body must be height:auto with no overflow hidden */
-        html, body {
-          height: auto;
-          overflow-x: hidden;
-          overflow-y: visible;
-          background: var(--bg);
-          color: var(--text);
-          font-family: var(--font);
+        /* Base Styles */
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Slightly refined font stack */
+            background: var(--dark-bg);
+            color: var(--text-light);
+            overflow-x: hidden;
         }
 
-        .widget-wrap {
-          max-width: 1200px;
-          margin: 0 auto;
-          padding: 28px 24px 36px;
+        /* Header Navigation */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1rem 1.5rem; /* Adjusted padding */
+            z-index: 1000;
+            background: rgba(10, 10, 10, 0.8); /* Slightly less opaque */
+            backdrop-filter: blur(15px); /* Stronger blur */
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Subtle separator */
         }
 
-        /* ── Header ── */
-        .header {
-          display: flex;
-          align-items: flex-start;
-          justify-content: space-between;
-          margin-bottom: 28px;
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
         }
-        .eyebrow {
-          display: flex;
-          align-items: center;
-          gap: 7px;
-          font-family: var(--font-mono);
-          font-size: 10px;
-          letter-spacing: 2.5px;
-          text-transform: uppercase;
-          color: var(--accent);
-          margin-bottom: 8px;
-        }
-        .eyebrow-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
-        .title { font-size: clamp(24px, 3.5vw, 38px); font-weight: 700; color: var(--text); line-height: 1.1; letter-spacing: -0.5px; }
-        .title em { color: var(--accent); font-style: italic; }
-        .subtitle { margin-top: 5px; font-size: 13px; color: var(--muted); font-weight: 400; }
-        .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
-        .live-badge {
-          display: flex; align-items: center; gap: 6px;
-          background: var(--oldnavy-light);
-          border: 1px solid rgba(0,135,90,0.25);
-          border-radius: 100px; padding: 5px 12px;
-          font-size: 10px; color: var(--oldnavy);
-          font-family: var(--font-mono); font-weight: 600;
-        }
-        .live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--oldnavy); animation: pulse 2s infinite; }
-        .updated-text { font-size: 10px; color: var(--muted); font-family: var(--font-mono); }
 
-        /* ── KPI Strip ── */
-        .kpi-strip { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 24px; }
-        .kpi-card {
-          background: var(--white); border: 1px solid var(--border);
-          border-radius: var(--radius); padding: 16px 18px;
-          box-shadow: var(--shadow-sm); position: relative; overflow: hidden;
-          transition: box-shadow .2s, transform .2s; cursor: default;
+        .logo h1 { /* Added logo class */
+            margin: 0;
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            font-weight: bold;
+            letter-spacing: 1px;
         }
-        .kpi-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
-        .kpi-card::after {
-          content: ''; position: absolute; bottom: 0; left: 0;
-          width: 100%; height: 3px;
-        }
-        .kpi-card.gap::after    { background: var(--gap); }
-        .kpi-card.athleta::after { background: var(--athleta); }
-        .kpi-card.oldnavy::after { background: var(--oldnavy); }
-        .kpi-card.banana::after  { background: var(--banana); }
-        .kpi-icon { width: 28px; height: 28px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 13px; margin-bottom: 8px; }
-        .kpi-card.gap .kpi-icon    { background: var(--gap-light);     color: var(--gap); }
-        .kpi-card.athleta .kpi-icon { background: var(--athleta-light); color: var(--athleta); }
-        .kpi-card.oldnavy .kpi-icon { background: var(--oldnavy-light); color: var(--oldnavy); }
-        .kpi-card.banana .kpi-icon  { background: var(--banana-light);  color: var(--banana); }
-        .kpi-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 3px; font-family: var(--font-mono); }
-        .kpi-value { font-size: 32px; font-weight: 700; line-height: 1; }
-        .kpi-card.gap .kpi-value    { color: var(--gap); }
-        .kpi-card.athleta .kpi-value { color: var(--athleta); }
-        .kpi-card.oldnavy .kpi-value { color: var(--oldnavy); }
-        .kpi-card.banana .kpi-value  { color: var(--banana); }
-        .kpi-sub { font-size: 10px; color: var(--muted); margin-top: 3px; }
 
-        /* ── Controls ── */
-        .controls { display: flex; align-items: center; gap: 7px; margin-bottom: 16px; flex-wrap: wrap; }
-        .controls-label { font-size: 11px; color: var(--muted); font-family: var(--font-mono); letter-spacing: 1px; }
-        .filter-btn {
-          display: flex; align-items: center; gap: 6px;
-          padding: 6px 14px; border-radius: 100px;
-          border: 1.5px solid var(--border2); background: var(--white);
-          color: var(--text2); font-family: var(--font); font-size: 12px;
-          font-weight: 500; cursor: pointer; transition: all .15s;
-          box-shadow: var(--shadow-sm);
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none; /* Remove default list style */
+            padding: 0;
+            margin: 0;
         }
-        .filter-btn .dot { width: 7px; height: 7px; border-radius: 50%; }
-        .filter-btn:hover { background: var(--surface2); }
-        .filter-btn[data-brand="all"].active    { border-color: var(--allbrands); color: var(--allbrands); background: var(--allbrands-light); }
-        .filter-btn[data-brand="gap"].active    { border-color: var(--gap);       color: var(--gap);       background: var(--gap-light); }
-        .filter-btn[data-brand="athleta"].active { border-color: var(--athleta);   color: var(--athleta);   background: var(--athleta-light); }
-        .filter-btn[data-brand="oldnavy"].active { border-color: var(--oldnavy);   color: var(--oldnavy);   background: var(--oldnavy-light); }
-        .filter-btn[data-brand="banana"].active  { border-color: var(--banana);    color: var(--banana);    background: var(--banana-light); }
-        .search-wrap { margin-left: auto; position: relative; }
-        .search-wrap input {
-          background: var(--white); border: 1.5px solid var(--border2);
-          border-radius: 100px; padding: 6px 14px 6px 32px;
-          font-family: var(--font); font-size: 12px; color: var(--text);
-          outline: none; width: 180px; box-shadow: var(--shadow-sm);
-          transition: border-color .2s, width .3s;
-        }
-        .search-wrap input:focus { border-color: var(--accent); width: 220px; }
-        .search-wrap input::placeholder { color: var(--muted); }
-        .search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 14px; pointer-events: none; }
 
-        /* ── Summary bar ── */
-        .summary-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
-        .result-count { font-size: 12px; color: var(--muted); font-family: var(--font-mono); }
-        .result-count span { color: var(--text); font-weight: 600; }
-        .legend { display: flex; gap: 14px; }
-        .legend-item { display: flex; align-items: center; gap: 5px; font-size: 10px; color: var(--muted); font-family: var(--font-mono); }
-        .legend-chip { width: 9px; height: 9px; border-radius: 3px; }
+        .nav-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            transition: color 0.3s ease, transform 0.3s ease;
+            padding: 0.5rem 0;
+            position: relative;
+        }
 
-        /* ── Calendar Grid ── */
-        .calendar-grid { display: flex; flex-direction: column; gap: 8px; }
-        .month-group {
-          background: var(--white); border: 1px solid var(--border);
-          border-radius: var(--radius); box-shadow: var(--shadow-sm);
-          overflow: hidden; transition: box-shadow .2s;
+        .nav-links a::after { /* Underline effect */
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: var(--primary-color);
+            transition: width 0.3s ease;
         }
-        .month-group:hover { box-shadow: var(--shadow-md); }
-        .month-header {
-          display: flex; align-items: center; gap: 14px;
-          padding: 12px 20px; cursor: pointer; user-select: none;
-          transition: background .15s; border-left: 4px solid transparent;
-        }
-        .month-header:hover { background: var(--surface2); }
-        .month-group.has-gap .month-header      { border-left-color: var(--gap); }
-        .month-group.has-athleta .month-header  { border-left-color: var(--athleta); }
-        .month-group.has-oldnavy .month-header  { border-left-color: var(--oldnavy); }
-        .month-group.has-banana .month-header   { border-left-color: var(--banana); }
-        .month-group.has-multi .month-header    { border-left-color: var(--allbrands); }
-        .month-name { font-size: 15px; font-weight: 700; color: var(--text); min-width: 140px; }
-        .month-count {
-          font-family: var(--font-mono); font-size: 10px; color: var(--muted);
-          background: var(--surface2); padding: 2px 8px; border-radius: 100px;
-          border: 1px solid var(--border);
-        }
-        .month-brand-pips { display: flex; gap: 5px; align-items: center; flex: 1; }
-        .brand-pip { width: 7px; height: 7px; border-radius: 50%; }
-        .chevron { color: var(--muted); font-size: 10px; margin-left: auto; transition: transform .3s; display: inline-block; }
-        .month-group.collapsed .chevron { transform: rotate(-90deg); }
-        .events-container { overflow: hidden; transition: max-height .4s cubic-bezier(.4,0,.2,1); border-top: 1px solid var(--border); }
-        .month-group.collapsed .events-container { max-height: 0 !important; border-top: none; }
-        .col-headers {
-          display: grid; grid-template-columns: 150px 1fr 160px 160px;
-          gap: 14px; padding: 7px 20px;
-          background: var(--surface2); border-bottom: 1px solid var(--border);
-        }
-        .col-header { font-size: 10px; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted); }
-        .event-row {
-          display: grid; grid-template-columns: 150px 1fr 160px 160px;
-          align-items: center; padding: 11px 20px; gap: 14px;
-          border-bottom: 1px solid var(--border); transition: background .12s;
-        }
-        .event-row:last-child { border-bottom: none; }
-        .event-row:hover { background: #fafbfc; }
-        .brand-badge {
-          display: inline-flex; align-items: center; gap: 5px;
-          padding: 3px 10px; border-radius: 6px; font-size: 10px;
-          font-weight: 700; letter-spacing: 0.3px;
-          font-family: var(--font-mono); white-space: nowrap;
-        }
-        .brand-badge .b-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
-        .badge-gap     { background: var(--gap-light);     color: var(--gap); }
-        .badge-athleta { background: var(--athleta-light); color: var(--athleta); }
-        .badge-oldnavy { background: var(--oldnavy-light); color: var(--oldnavy); }
-        .badge-banana  { background: var(--banana-light);  color: var(--banana); }
-        .event-name  { font-size: 13px; font-weight: 600; color: var(--text); }
-        .event-type  { font-size: 10px; color: var(--muted); margin-top: 2px; font-family: var(--font-mono); }
-        .event-notes { font-size: 11px; color: var(--text2); }
-        .status-chip {
-          display: inline-flex; align-items: center; gap: 4px;
-          font-size: 10px; font-family: var(--font-mono);
-          padding: 3px 9px; border-radius: 6px; white-space: nowrap;
-        }
-        .status-chip.active   { background: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9; }
-        .status-chip.upcoming { background: #e8eef8; color: #1a4fa8; border: 1px solid #c5d5f0; }
-        .status-chip.extended { background: #ede7f6; color: #5c35b5; border: 1px solid #d1c4e9; }
 
-        /* ── No results ── */
-        .no-results { text-align: center; padding: 48px; color: var(--muted); display: none; background: var(--white); border-radius: var(--radius); border: 1px solid var(--border); }
-        .no-results.visible { display: block; }
+        .nav-links a:hover {
+            color: var(--primary-color);
+            transform: translateY(-2px); /* Slight lift on hover */
+        }
+        .nav-links a:hover::after {
+            width: 100%;
+        }
 
-        /* ── Footer ── */
-        .footer { margin-top: 20px; display: flex; align-items: center; justify-content: space-between; padding-top: 16px; border-top: 1px solid var(--border); }
-        .footer-left { display: flex; align-items: center; gap: 8px; }
-        .footer-logo { background: var(--accent); color: white; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 5px; letter-spacing: 1px; }
-        .footer-text { font-size: 11px; color: var(--muted); }
+        /* Hamburger Menu */
+        .hamburger {
+            display: none;
+            cursor: pointer;
+            font-size: 1.8rem;
+            color: var(--text-light);
+            z-index: 1001; /* Ensure it's above nav links on mobile */
+        }
 
-        @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.8)} }
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+            display: flex; /* Use flex for easier content centering */
+            align-items: center; /* Vertically center */
+            justify-content: flex-start; /* Align content left */
+            padding-left: 5%;
+        }
 
-        @media (max-width: 800px) {
-          .kpi-strip { grid-template-columns: 1fr 1fr; }
-          .event-row, .col-headers { grid-template-columns: 130px 1fr; }
-          .event-notes, .event-row > :last-child,
-          .col-headers > :nth-child(3), .col-headers > :nth-child(4) { display: none; }
-          .header { flex-direction: column; gap: 12px; }
-          .search-wrap { margin-left: 0; }
-          .search-wrap input { width: 100%; }
-          .legend { display: none; }
+        /* Video Background - kept for layering possibility */
+        #background-video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            min-width: 100%;
+            min-height: 100%;
+            z-index: -2; /* Behind 3D canvas */
+            opacity: 0.3; /* Make it subtle if 3D is primary */
+            object-fit: cover;
+        }
+
+        /* 3D Planet Background Container */
+        #planet-bg {
+            position: fixed; /* Use fixed to keep it static */
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1; /* Behind content, above video */
+            overflow: hidden;
+        }
+
+        .hero-content {
+           /* position: absolute; */ /* No longer needed with flex */
+           /* bottom: 20%; */ /* No longer needed */
+           /* left: 5%; */ /* Handled by flex container padding */
+            max-width: 650px;
+            z-index: 1; /* Ensure it's above background */
+            background: rgba(10, 10, 10, 0.5); /* Optional subtle background */
+            padding: 2rem;
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4.5rem); /* Responsive font size */
+            margin: 0 0 1rem 0;
+            line-height: 1.1;
+            color: var(--text-light);
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+        }
+        .hero p { /* Added subtitle paragraph */
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+        }
+
+        /* Sections */
+        .section {
+            padding: 5rem 2rem; /* Increased padding */
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative; /* Needed for z-index */
+            z-index: 1; /* Ensure sections are above fixed background */
+        }
+
+        .section h2 {
+            font-size: clamp(2rem, 5vw, 3rem); /* Responsive */
+            color: var(--primary-color);
+            margin-bottom: 3rem; /* Increased margin */
+            text-align: center; /* Center section titles */
+        }
+
+        /* Technology Grid */
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Wider cards */
+            gap: 2.5rem; /* Increased gap */
+        }
+
+        .tech-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px; /* Smoother corners */
+            padding: 2rem;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            backdrop-filter: blur(5px); /* Glassmorphism touch */
+        }
+
+        .tech-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(0, 247, 255, 0.1); /* Secondary color glow */
+        }
+
+        .tech-card i {
+            color: var(--secondary-color); /* Use secondary color for icons */
+            margin-bottom: 1rem;
+        }
+        .tech-card h3 {
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+         .tech-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+         }
+
+        /* Contact Form */
+        .contact-form {
+            max-width: 700px; /* Wider form */
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.05); /* Form background */
+            padding: 2.5rem;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 1rem; /* More padding */
+            background: rgba(0,0,0,0.3); /* Darker input background */
+            border: 1px solid rgba(255, 255, 255, 0.2); /* Subtle border */
+            color: var(--text-light);
+            border-radius: 8px; /* Rounded inputs */
+            font-size: 1rem;
+            box-sizing: border-box; /* Include padding in width */
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 15px rgba(255, 0, 61, 0.3); /* Glow on focus */
+        }
+
+        textarea {
+            resize: vertical; /* Allow vertical resize only */
+        }
+
+        /* General Button Style */
+        .btn {
+            background-color: var(--primary-color);
+            color: var(--text-light);
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 50px; /* Pill shape */
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn:hover {
+            background-color: #e00036; /* Darker shade on hover */
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 0, 61, 0.4);
+        }
+        .btn:active {
+             transform: translateY(-1px);
+             box-shadow: 0 2px 10px rgba(255, 0, 61, 0.3);
+        }
+
+
+        /* Footer */
+        footer {
+            background: #000;
+            padding: 3rem 2rem; /* More padding */
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            border-top: 1px solid rgba(255, 255, 255, 0.1); /* Subtle separator */
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem; /* More space */
+        }
+
+        .social-links a {
+            color: var(--text-muted); /* Muted color */
+            font-size: 1.8rem; /* Larger icons */
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: var(--primary-color);
+            transform: scale(1.2); /* Scale up on hover */
+        }
+        footer p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Scroll Animation Styles */
+        .hidden {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            will-change: opacity, transform; /* Performance hint */
+        }
+        .visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+
+        /* Mobile Styles */
+        @media (max-width: 768px) {
+             header {
+                padding: 1rem;
+                background: rgba(10, 10, 10, 0.95); /* More solid on mobile */
+             }
+            .nav-links {
+                display: none; /* Hide by default */
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: var(--dark-bg);
+                padding: 2rem 1rem; /* More padding */
+                flex-direction: column;
+                text-align: center;
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
+                gap: 1.5rem; /* More space between links */
+            }
+
+            .nav-links.active {
+                display: flex; /* Show when active */
+            }
+
+            .hamburger {
+                display: block; /* Show hamburger */
+            }
+
+            .hero {
+                padding-left: 2rem; /* Adjust padding */
+                padding-right: 2rem;
+                 justify-content: center; /* Center content on mobile */
+                 text-align: center;
+            }
+            .hero-content {
+                padding: 1.5rem;
+            }
+
+            .section {
+                padding: 3rem 1rem;
+            }
+             .tech-grid {
+                grid-template-columns: 1fr; /* Stack cards on mobile */
+             }
+             .contact-form {
+                 padding: 1.5rem;
+             }
         }
     </style>
 </head>
 <body>
-<div class="widget-wrap" id="widget-wrap">
+<!-- 3D Planet Background -->
+<div id="planet-bg"></div>
 
-    <div class="header">
-        <div class="header-left">
-            <div class="eyebrow"><span class="eyebrow-dot"></span> Project Yale · Gap Inc. Brands</div>
-            <div class="title">Peak Season <em>Calendar</em></div>
+<!-- Header -->
+<header>
+    <nav>
+        <div class="logo"><h1>ENORMOUS</h1></div>
+        <ul class="nav-links"> <!-- Changed to ul for semantics -->
+            <li><a href="index.html">Home</a></li>
+            <li><a href="galaxies.html">Galaxies</a></li>
+            <li><a href="universe.html">Universe</a></li>
+            <li><a href="#missions">Missions</a></li>
+            <li><a href="#technology">Technology</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+        <div class="hamburger">☰</div>
+    </nav>
+</header>
+
+<!-- Hero Section with Self-Hosted Video -->
+<section class="hero">
+    <!-- Video can act as a fallback or subtle layer -->
+    <video autoplay muted loop playsinline id="background-video">
+        <!-- ===== IMPORTANT: REPLACE 'your-video.mp4' with your actual video file ===== -->
+        <source src="your-video.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <div class="hero-content">
+        <h1>Pioneering The Cosmos</h1>
+        <p>Join Enormous on our journey to unravel the mysteries of the universe and push the boundaries of exploration.</p>
+        <a href="#about" class="btn">Learn More</a>
+    </div>
+</section>
+
+<!-- Missions Section (Example - Add Content) -->
+<section id="missions" class="section hidden">
+    <h2>Current Missions</h2>
+    <p style="text-align: center; color: var(--text-muted); margin-bottom: 3rem;">Exploring the frontiers of space, one mission at a time.</p>
+    <!-- Add mission details here -->
+    <div style="text-align:center; padding: 2rem; background: rgba(255,255,255,0.05); border-radius: 10px;">Mission content placeholder</div>
+</section>
+
+<!-- Technology Section -->
+<section id="technology" class="section hidden">
+    <h2>Our Technology</h2>
+    <div class="tech-grid">
+        <div class="tech-card hidden">
+            <i class="fas fa-rocket fa-3x"></i>
+            <h3>Advanced Propulsion</h3>
+            <p>Developing next-generation ion thrusters and fusion concepts for faster, efficient deep space travel.</p>
         </div>
-        <div class="header-right">
-            <div class="live-badge"><span class="live-dot"></span> ACTIVE SEASON</div>
-            <div class="updated-text">Updated Feb 19, 2026</div>
+        <div class="tech-card hidden">
+            <i class="fas fa-satellite-dish fa-3x"></i> <!-- Changed icon -->
+            <h3>Quantum Comms</h3>
+            <p>High-throughput, secure communication networks spanning interplanetary distances using quantum entanglement.</p>
+        </div>
+        <div class="tech-card hidden">
+            <i class="fas fa-microscope fa-3x"></i>
+            <h3>Exo-Life Detection</h3>
+            <p>Sophisticated sensor suites designed to detect biosignatures on distant exoplanets and moons.</p>
+        </div>
+        <div class="tech-card hidden">
+            <i class="fas fa-cubes fa-3x"></i>
+            <h3>Modular Habitats</h3>
+            <p>Expandable and self-sustaining habitat modules for long-duration missions and off-world settlements.</p>
         </div>
     </div>
+</section>
 
-    <div class="kpi-strip">
-        <div class="kpi-card gap">
-            <div class="kpi-icon">◈</div>
-            <div class="kpi-label">Gap Events</div>
-            <div class="kpi-value" id="kpi-gap">14</div>
-            <div class="kpi-sub">Earn/Redeem + F&F</div>
+<!-- About Section -->
+<section id="about" class="section hidden">
+    <h2>About Enormous</h2>
+    <p style="text-align: center; color: var(--text-muted); max-width: 800px; margin: 0 auto 2rem auto;">
+        Aim is make people understand about universe
+    </p>
+</section>
+
+<!-- Contact Section -->
+<section id="contact" class="section hidden">
+    <h2>Get In Touch</h2>
+    <p style="text-align: center; color: var(--text-muted); margin-bottom: 2rem;">Have questions, ideas, or partnership inquiries? Reach out to us.</p>
+    <form class="contact-form" id="contactForm"> <!-- Added ID for potential JS -->
+        <div class="form-group">
+            <label for="name"></label><input type="text" id="name" placeholder="Your Name" required>
         </div>
-        <div class="kpi-card athleta">
-            <div class="kpi-icon">◈</div>
-            <div class="kpi-label">Athleta Events</div>
-            <div class="kpi-value" id="kpi-athleta">6</div>
-            <div class="kpi-sub">Friends & Family + Semi-Annual</div>
+        <div class="form-group">
+            <label for="email"></label><input type="email" id="email" placeholder="Your Email" required>
         </div>
-        <div class="kpi-card oldnavy">
-            <div class="kpi-icon">◈</div>
-            <div class="kpi-label">Old Navy Events</div>
-            <div class="kpi-value" id="kpi-oldnavy">9</div>
-            <div class="kpi-sub">SuperCash + Card Appreciation</div>
+        <div class="form-group">
+            <label for="message"></label><textarea id="message" rows="6" placeholder="Your Message" required></textarea> <!-- Increased rows -->
         </div>
-        <div class="kpi-card banana">
-            <div class="kpi-icon">◈</div>
-            <div class="kpi-label">Banana Republic</div>
-            <div class="kpi-value" id="kpi-banana">4</div>
-            <div class="kpi-sub">Prime Event + SuperCash</div>
+        <div style="text-align: center;"> <!-- Center button -->
+            <button type="submit" class="btn">Send Message</button>
         </div>
+    </form>
+</section>
+
+<!-- Footer -->
+<footer>
+    <div class="social-links">
+        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a> <!-- Use -f for brand icon -->
+        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a> <!-- Use -in for brand icon -->
     </div>
+    <p>© 2025 Enormous Space Technologies. All rights reserved.</p>
+</footer>
 
-    <div class="controls">
-        <span class="controls-label">FILTER:</span>
-        <button class="filter-btn active" data-brand="all" onclick="filterBrand('all',this)"><span class="dot" style="background:var(--allbrands)"></span> All Brands</button>
-        <button class="filter-btn" data-brand="gap" onclick="filterBrand('gap',this)"><span class="dot" style="background:var(--gap)"></span> Gap</button>
-        <button class="filter-btn" data-brand="athleta" onclick="filterBrand('athleta',this)"><span class="dot" style="background:var(--athleta)"></span> Athleta</button>
-        <button class="filter-btn" data-brand="oldnavy" onclick="filterBrand('oldnavy',this)"><span class="dot" style="background:var(--oldnavy)"></span> Old Navy</button>
-        <button class="filter-btn" data-brand="banana" onclick="filterBrand('banana',this)"><span class="dot" style="background:var(--banana)"></span> Banana Rep.</button>
-        <div class="search-wrap">
-            <span class="search-icon">&#9906;</span>
-            <input type="text" id="search-input" placeholder="Search events…" oninput="searchEvents(this.value)">
-        </div>
-    </div>
+<!-- === JAVASCRIPT === -->
+<script>
+    // --- Hamburger Menu Toggle ---
+    const hamburger = document.querySelector('.hamburger');
+    const navLinks = document.querySelector('.nav-links');
 
-    <div class="summary-bar">
-        <div class="result-count">Showing <span id="event-count">32</span> events across <span id="month-count">12</span> months</div>
-        <div class="legend">
-            <div class="legend-item"><span class="legend-chip" style="background:#e8f5e9;border:1px solid #c8e6c9"></span>Active</div>
-            <div class="legend-item"><span class="legend-chip" style="background:#e8eef8;border:1px solid #c5d5f0"></span>Upcoming</div>
-            <div class="legend-item"><span class="legend-chip" style="background:#ede7f6;border:1px solid #d1c4e9"></span>Extended</div>
-        </div>
-    </div>
+    hamburger.addEventListener('click', () => {
+        navLinks.classList.toggle('active');
+        // Optional: Change hamburger icon to 'X' when open
+        hamburger.textContent = navLinks.classList.contains('active') ? '✕' : '☰';
+    });
 
-    <div class="calendar-grid" id="calendar-grid"></div>
-    <div class="no-results" id="no-results"><div>No events match your search or filter.</div></div>
+    // Close menu when a link is clicked
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', () => {
+            if (navLinks.classList.contains('active')) {
+                 navLinks.classList.remove('active');
+                 hamburger.textContent = '☰';
+            }
+        });
+    });
 
-    <div class="footer">
-        <div class="footer-left">
-            <span class="footer-logo">YALE</span>
-            <span class="footer-text">Tools Team · Transition Dashboard</span>
-        </div>
-    </div>
+    // --- Smooth Scroll ---
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            const href = this.getAttribute('href');
+            // Ensure it's a valid internal link and not just '#'
+            if (href && href.startsWith('#') && href.length > 1) {
+                e.preventDefault();
+                const targetElement = document.querySelector(href);
+                if (targetElement) {
+                    // Calculate offset needed for fixed header
+                    const headerOffset = document.querySelector('header').offsetHeight + 20; // Add extra space
+                    const elementPosition = targetElement.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
 
-</div>
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            }
+            // Close mobile nav if open after clicking
+            if (navLinks.classList.contains('active')) {
+                 navLinks.classList.remove('active');
+                 hamburger.textContent = '☰';
+            }
+        });
+    });
+
+     // --- Scroll Reveal Animation ---
+     const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                // Optional: Stop observing once visible to save resources
+                // observer.unobserve(entry.target);
+            } else {
+                 // Optional: Remove class if you want animation to replay on scroll up
+                 // entry.target.classList.remove('visible');
+            }
+        });
+    }, {
+        rootMargin: '0px', // Default
+        threshold: 0.1 // Trigger when 10% of the element is visible
+    });
+
+    // Observe all elements with the 'hidden' class
+    document.querySelectorAll('.hidden').forEach(el => observer.observe(el));
+
+    // --- Contact Form (Basic Console Log) ---
+    // For a real site, you'd use Fetch API to send data to a server/backend service
+    const contactForm = document.getElementById('contactForm');
+    if (contactForm) {
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault(); // Prevent default page reload
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const message = document.getElementById('message').value;
+            console.log('Form Submitted:', { name, email, message });
+            alert('Thank you for your message! (Check console for data)'); // User feedback
+            contactForm.reset(); // Clear the form
+        });
+    }
+
+</script>
+
+<!-- Three.js Library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<!-- Optional: OrbitControls for manual rotation/zoom -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script> -->
 
 <script>
-    // ── Data ─────────────────────────────────────────────────────────────────────
-    const events = [
-      { month:"February – March", brand:"gap",     name:"GapCash Earn/Redeem",             type:"Earn & Redeem",   notes:"Varies by promotional cadence", status:"active"   },
-      { month:"March",            brand:"athleta", name:"Friends & Family",                type:"Friends & Family",notes:"",                              status:"upcoming" },
-      { month:"March",            brand:"banana",  name:"Friends & Family",                type:"Friends & Family",notes:"",                              status:"upcoming" },
-      { month:"March",            brand:"gap",     name:"Friends & Family",                type:"Friends & Family",notes:"",                              status:"upcoming" },
-      { month:"March",            brand:"gap",     name:"GapCash Earn/Redeem",             type:"Earn & Redeem",   notes:"",                              status:"upcoming" },
-      { month:"March",            brand:"oldnavy", name:"Friends & Family",                type:"Friends & Family",notes:"",                              status:"upcoming" },
-      { month:"March",            brand:"oldnavy", name:"SuperCash Earn (US/COA)",         type:"SuperCash",       notes:"",                              status:"upcoming" },
-      { month:"March",            brand:"oldnavy", name:"Cyber Easter (US/COA)",           type:"Promotional",     notes:"",                              status:"upcoming" },
-      { month:"March – April",    brand:"oldnavy", name:"Card Appreciation Month",         type:"Card Benefit",    notes:"Spans both months",             status:"extended" },
-      { month:"March – April",    brand:"oldnavy", name:"Cyber Easter (extends into Apr)", type:"Promotional",     notes:"Continues from March",          status:"extended" },
-      { month:"May",              brand:"gap",     name:"Cyber Easter",                    type:"Promotional",     notes:"Spans both months",             status:"upcoming" },
-      { month:"June",             brand:"gap",     name:"Friends & Family",                type:"Friends & Family",notes:"",                              status:"upcoming" },
-      { month:"June",             brand:"gap",     name:"GapCash Earn/Redeem",             type:"Earn & Redeem",   notes:"",                              status:"upcoming" },
-      { month:"June",             brand:"athleta", name:"Semi-Annual Sale",                type:"Sale",            notes:"",                              status:"upcoming" },
-      { month:"June",             brand:"oldnavy", name:"SuperCash Earn (US/COA)",         type:"SuperCash",       notes:"Continues into July",           status:"extended" },
-      { month:"July",             brand:"gap",     name:"Friends & Family",                type:"Friends & Family",notes:"",                              status:"upcoming" },
-      { month:"July",             brand:"athleta", name:"Semi-Annual Sale",                type:"Sale",            notes:"",                              status:"upcoming" },
-      { month:"July",             brand:"oldnavy", name:"Semi-Annual Sale",                type:"Sale",            notes:"",                              status:"upcoming" },
-      { month:"July",             brand:"oldnavy", name:"SuperCash Redeem (US/COA)",       type:"SuperCash",       notes:"",                              status:"upcoming" },
-      { month:"August",           brand:"banana",  name:"Prime Event",                     type:"Prime Event",     notes:"",                              status:"upcoming" },
-      { month:"August",           brand:"gap",     name:"Friends & Family",                type:"Friends & Family",notes:"",                              status:"upcoming" },
-      { month:"September",        brand:"gap",     name:"GapCash Earn/Redeem",             type:"Earn & Redeem",   notes:"",                              status:"upcoming" },
-      { month:"October",          brand:"oldnavy", name:"SuperCash Earn (US/COA)",         type:"SuperCash",       notes:"",                              status:"upcoming" },
-      { month:"November",         brand:"gap",     name:"Friends & Family",                type:"Friends & Family",notes:"Black Friday / Holiday",        status:"upcoming" },
-      { month:"November",         brand:"gap",     name:"GapCash Earn/Redeem",             type:"Earn & Redeem",   notes:"",                              status:"upcoming" },
-      { month:"November",         brand:"oldnavy", name:"SuperCash Redeem (US/COA)",       type:"SuperCash",       notes:"",                              status:"upcoming" },
-      { month:"November",         brand:"banana",  name:"SuperCash Redeem (US/COA)",       type:"SuperCash",       notes:"",                              status:"upcoming" },
-      { month:"December",         brand:"gap",     name:"Friends & Family",                type:"Friends & Family",notes:"Holiday",                       status:"upcoming" },
-      { month:"December",         brand:"athleta", name:"Friends & Family",                type:"Friends & Family",notes:"",                              status:"upcoming" },
-      { month:"December",         brand:"oldnavy", name:"Friends & Family",                type:"Friends & Family",notes:"",                              status:"upcoming" },
-      { month:"December",         brand:"banana",  name:"Friends & Family",                type:"Friends & Family",notes:"Holiday",                       status:"upcoming" },
-    ];
+    // --- Advanced Three.js Background ---
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000); // Increased far plane
+    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true }); // Alpha true for transparent background
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.getElementById('planet-bg').appendChild(renderer.domElement);
 
-    const brandColors = { gap:'#1a6ef5', athleta:'#c2185b', oldnavy:'#00875a', banana:'#d4830a' };
-    const brandLabels = { gap:'GAP', athleta:'ATHLETA', oldnavy:'OLD NAVY', banana:'BANANA REP.' };
-    const statusLabels = { active:'● ACTIVE', upcoming:'◎ UPCOMING', extended:'↔ EXTENDED' };
+    const textureLoader = new THREE.TextureLoader();
 
-    let activeFilter = 'all';
-    let activeSearch = '';
+    // --- Planet ---
+    // ===== IMPORTANT: Replace these placeholder URLs with actual high-res texture URLs =====
+    const earthTexture = textureLoader.load('https://example.com/path/to/earth_day_high_res.jpg'); // Color map
+    const earthBumpMap = textureLoader.load('https://example.com/path/to/earth_bump_map.jpg'); // Bump map for mountains/terrain
+    const earthSpecularMap = textureLoader.load('https://example.com/path/to/earth_specular_map.jpg'); // Specular map for water shininess
 
-    // ── Auto-resize: tells the parent SharePoint page how tall this iframe is ──
-    function notifyHeight() {
-      const h = document.getElementById('widget-wrap').scrollHeight + 40;
-      // postMessage to SharePoint parent
-      try { window.parent.postMessage({ type: 'iframeHeight', height: h }, '*'); } catch(e) {}
-      // Also set own iframe element if accessible
-      try { window.frameElement && (window.frameElement.style.height = h + 'px'); } catch(e) {}
+    const planetGeometry = new THREE.SphereGeometry(2.5, 64, 64); // Slightly larger planet
+    const planetMaterial = new THREE.MeshStandardMaterial({
+        map: earthTexture,
+        bumpMap: earthBumpMap,
+        bumpScale: 0.05, // Adjust bump intensity
+        roughnessMap: earthSpecularMap, // Using specular as roughness (invert if needed)
+        metalness: 0.4, // Adjust metalness
+        roughness: 0.7 // Adjust roughness
+    });
+    const planet = new THREE.Mesh(planetGeometry, planetMaterial);
+    scene.add(planet);
+
+    // --- Clouds ---
+    const cloudTexture = textureLoader.load('https://example.com/path/to/earth_clouds_high_res.png'); // Use PNG with transparency
+    const cloudGeometry = new THREE.SphereGeometry(2.55, 64, 64); // Slightly larger than planet
+    const cloudMaterial = new THREE.MeshPhongMaterial({ // Phong for transparency/specular highlights
+        map: cloudTexture,
+        transparent: true,
+        opacity: 0.8, // Adjust cloud opacity
+        depthWrite: false // Prevent rendering issues with transparency
+    });
+    const clouds = new THREE.Mesh(cloudGeometry, cloudMaterial);
+    scene.add(clouds);
+
+
+    // --- Starfield ---
+    const starGeometry = new THREE.BufferGeometry();
+    const starCount = 10000;
+    const posArray = new Float32Array(starCount * 3); // x, y, z for each star
+
+    for(let i = 0; i < starCount * 3; i++) {
+        // Assign random positions within a large sphere radius
+        posArray[i] = (Math.random() - 0.5) * 1000; // Spread stars out further
     }
 
-    function buildCalendar() {
-      const grid = document.getElementById('calendar-grid');
-      grid.innerHTML = '';
+    starGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+    const starMaterial = new THREE.PointsMaterial({
+        size: 0.25, // Adjust star size
+        color: 0xffffff,
+        transparent: true,
+        opacity: 0.8,
+        blending: THREE.AdditiveBlending // Brighter where stars overlap
+    });
+    const starMesh = new THREE.Points(starGeometry, starMaterial);
+    scene.add(starMesh);
 
-      const months = {}, monthOrder = [];
-      events.forEach(e => {
-        if (!months[e.month]) { months[e.month] = []; monthOrder.push(e.month); }
-        months[e.month].push(e);
-      });
 
-      let totalEvents = 0, totalMonths = 0, anyVisible = false;
+    // --- Lighting ---
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.2); // Soft ambient light
+    scene.add(ambientLight);
 
-      monthOrder.forEach(month => {
-        const visible = months[month].filter(e =>
-          (activeFilter === 'all' || e.brand === activeFilter) &&
-          (!activeSearch || e.name.toLowerCase().includes(activeSearch) || e.type.toLowerCase().includes(activeSearch))
-        );
-        if (!visible.length) return;
-        anyVisible = true;
-        totalEvents += visible.length;
-        totalMonths++;
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1.0); // Simulates sunlight
+    directionalLight.position.set(5, 3, 5); // Position the light source
+    scene.add(directionalLight);
 
-        const brands = [...new Set(visible.map(e => e.brand))];
-        const multiClass = brands.length > 1 ? 'has-multi' : `has-${brands[0]}`;
-        const group = document.createElement('div');
-        group.className = `month-group ${multiClass}`;
-        group.innerHTML = `
-          <div class="month-header" onclick="toggleMonth(this)">
-            <span class="month-name">${month}</span>
-            <span class="month-count">${visible.length} event${visible.length!==1?'s':''}</span>
-            <div class="month-brand-pips">${brands.map(b=>`<span class="brand-pip" style="background:${brandColors[b]}"></span>`).join('')}</div>
-            <span class="chevron">&#9660;</span>
-          </div>
-          <div class="events-container" style="max-height:${visible.length*66+36}px">
-            <div class="col-headers">
-              <div class="col-header">Brand</div>
-              <div class="col-header">Event</div>
-              <div class="col-header">Notes</div>
-              <div class="col-header">Status</div>
-            </div>
-            ${visible.map(e=>`
-              <div class="event-row">
-                <div><span class="brand-badge badge-${e.brand}"><span class="b-dot" style="background:${brandColors[e.brand]}"></span>${brandLabels[e.brand]}</span></div>
-                <div><div class="event-name">${e.name}</div><div class="event-type">${e.type}</div></div>
-                <div class="event-notes">${e.notes||'—'}</div>
-                <div><span class="status-chip ${e.status}">${statusLabels[e.status]}</span></div>
-              </div>`).join('')}
-          </div>`;
-        grid.appendChild(group);
-      });
+    // --- Camera Position ---
+    camera.position.z = 6;
 
-      document.getElementById('event-count').textContent = totalEvents;
-      document.getElementById('month-count').textContent = totalMonths;
-      document.getElementById('no-results').classList.toggle('visible', !anyVisible);
 
-      // Notify parent of new height after render
-      setTimeout(notifyHeight, 50);
+    // --- Optional: Orbit Controls ---
+    // Uncomment the script tag above and this section for manual controls
+    // const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    // controls.enableDamping = true; // Smooths movement
+    // controls.dampingFactor = 0.05;
+    // controls.screenSpacePanning = false;
+    // controls.minDistance = 4; // Prevent zooming too close
+    // controls.maxDistance = 20; // Prevent zooming too far
+
+    // --- Mouse Interaction (Subtle Parallax) ---
+    let mouseX = 0, mouseY = 0;
+    let targetX = 0, targetY = 0;
+    const windowHalfX = window.innerWidth / 2;
+    const windowHalfY = window.innerHeight / 2;
+
+    function onDocumentMouseMove(event) {
+        mouseX = (event.clientX - windowHalfX);
+        mouseY = (event.clientY - windowHalfY);
     }
+    document.addEventListener('mousemove', onDocumentMouseMove);
 
-    function filterBrand(brand, btn) {
-      activeFilter = brand;
-      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      buildCalendar();
+    // --- Scroll Interaction ---
+    let lastScrollY = window.pageYOffset;
+    function updateCameraOnScroll() {
+        const scrollY = window.pageYOffset;
+        // Example: Rotate planet based on scroll direction/amount
+        planet.rotation.y += (scrollY - lastScrollY) * 0.0005;
+        clouds.rotation.y += (scrollY - lastScrollY) * 0.0003; // Slightly different cloud rotation
+        // Example: Move camera slightly Z based on scroll
+        // camera.position.z = 6 + scrollY * 0.001;
+        lastScrollY = scrollY;
     }
+    window.addEventListener('scroll', updateCameraOnScroll);
 
-    function searchEvents(val) {
-      activeSearch = val.toLowerCase().trim();
-      buildCalendar();
+
+    // --- Animation Loop ---
+    const clock = new THREE.Clock(); // For consistent animation speed
+
+    function animate() {
+        requestAnimationFrame(animate);
+        const elapsedTime = clock.getElapsedTime();
+
+        // Subtle continuous rotation
+        planet.rotation.y += 0.0005;
+        clouds.rotation.y += 0.0008; // Clouds rotate slightly faster
+
+        // Starfield subtle movement (optional)
+        // starMesh.rotation.y -= 0.0001;
+
+        // Update mouse parallax effect smoothly
+        targetX = mouseX * 0.001;
+        targetY = mouseY * 0.001;
+        const parallaxFactor = 0.05; // How much smoothing
+        scene.rotation.y += parallaxFactor * (targetX - scene.rotation.y);
+        scene.rotation.x += parallaxFactor * (targetY - scene.rotation.x);
+
+
+        // Update OrbitControls if enabled
+        // controls.update();
+
+        renderer.render(scene, camera);
     }
+    animate();
 
-    function toggleMonth(header) {
-      header.parentElement.classList.toggle('collapsed');
-      setTimeout(notifyHeight, 420); // wait for CSS transition to finish
-    }
 
-    // ── Init ─────────────────────────────────────────────────────────────────────
-    buildCalendar();
-    window.addEventListener('load', notifyHeight);
-    window.addEventListener('resize', notifyHeight);
+    // --- Responsive Resize ---
+    window.addEventListener('resize', () => {
+        // Update camera aspect ratio
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+
+        // Update renderer size
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+        // Update mouse parallax calculation reference points
+        windowHalfX = window.innerWidth / 2;
+        windowHalfY = window.innerHeight / 2;
+    });
+
 </script>
+
 </body>
 </html>
